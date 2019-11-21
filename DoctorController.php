@@ -485,10 +485,10 @@ class DoctorController extends Controller {
         //$tests = Test::whereIn('id', explode(',', $userTimes[0]->tokenavailable_date->test_id))->orderBy('id', 'asc')->get();
 
         if ($userTimes[0]->token_data != Null) {
-
+//      echo($userTimes[0]->tokenavailable_date->user_test[0]->name);
+//            exit;
             return view('admin.DoctorMaster.addAdminToken', compact('userTimes'));
         } elseif ($userTimes[0]->slot_data != Null) {
-
 //            echo($userTimes[0]->tokenavailable_date);
 //            exit;
             return view('admin.DoctorMaster.addAdminSlot', compact('userTimes', 'shiftlist'));
@@ -520,15 +520,14 @@ class DoctorController extends Controller {
         $name = $request->name;
         $mobile = $request->mobile;
         $email = $request->email;
-        $id = $request->id;
-        $tokenPatient = TokenPatient::find($id);
-      
-        if ($id != '') {
-       } else {
+
+        $tokenPatient = TokenPatient::find($parts[1]);
+        if ($parts[1] != '' && $tokenPatient->status === 0) {
+            
+        } else {
             $tokenPatient = new TokenPatient;
-         }
-        
-        $tokenPatient->unique_user_id = $txnNo;
+        }
+        $tokenPatient->unique_user_id = $txnNo ;
         $tokenPatient->user_id = $user_id;
         $tokenPatient->user_available_date_id = $availableDate_id;
         $tokenPatient->user_time_id = $slot_time_id;
@@ -543,12 +542,12 @@ class DoctorController extends Controller {
         $tokenPatient->mobile = $mobile;
         $tokenPatient->email = $email;
         $tokenPatient->status = 1;
-        $tokenPatient->unique_user_id = $txnNo;
+         $tokenPatient->unique_user_id = $txnNo;
         $tokenPatient->check_status = 0;
         $tokenPatient->admin_status = 1;
         $tokenPatient->createdBy = $admin->id;
         $tokenPatient->save();
-
+      
         $tokenPatient->save();
         $amount = 0;
         $tokenPayments = new TokenPayments;
@@ -590,6 +589,7 @@ class DoctorController extends Controller {
         if ($tokenPatient->id != '' && $tokenPatient->status === 0) {
             
         } else {
+
             $tokenPatient = new TokenPatient;
         }
 
